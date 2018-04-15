@@ -1,0 +1,73 @@
+#define __LIBRARY__
+
+#include<linux/kernel.h>
+
+#include<unistd.h>
+
+
+i_queue* queue_init(int length)
+{
+	i_queue * queue = (i_queue*)malloc(sizeof(i_queue));
+	queue->rear = (sem_queue*)malloc(sizeof(sem_queue));
+	queue->length = length;
+	queue->head = queue->rear;
+	return queue;
+}
+
+void add_item(i_queue* queue,int number)
+{
+	if (queue->length == 0)
+		return;
+	queue->length--;
+	queue->rear->data = number;
+	sem_queue *tmp = (sem_queue*)malloc(sizeof(sem_queue));
+	queue->rear->next = tmp;
+	queue->rear = tmp;
+}
+
+int minus_item(i_queue* queue)
+{
+	if (queue->head == queue->rear)
+		return 0;
+	int tmp = queue->head->data;
+	queue->length++;
+	sem_queue *queue_tmp = queue->head;
+	queue->head = queue->head->next;
+	free(queue_tmp);
+	return tmp;
+}
+
+
+sem_t* sys_semopen(const char* name,unsigned int value)
+{
+    sem_t *sem;
+    sem->name = name;
+    sem->value = value;
+
+    return sem;
+}
+
+//i_queue *queue_index = queue_init(10);
+
+int sys_semwait(sem_t* sem)
+{
+    printk("semwait\n");
+    return 0;
+}
+
+int sys_sempost(sem_t* sem)
+{
+    cli();//close interrupter
+    while(1)
+    {
+        if(sem->buffer
+        sem->buffer += 1;
+    }
+    sti();//open interrupter
+    return 0;
+}
+
+int sys_semunlink(const char* sem)
+{
+    return 0;
+}
